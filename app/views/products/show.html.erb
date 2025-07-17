@@ -1,0 +1,40 @@
+<div class="container py-5">
+  <%= link_to "← Back", products_path, class: "btn btn-link mb-4" %>
+
+  <div class="card p-4 shadow-lg">
+    <div class="row g-4 align-items-center">
+      <div class="col-md-5">
+        <% if @product.image_url.present? %>
+          <img src="<%= @product.image_url %>" alt="<%= @product.name %>" class="img-fluid rounded" />
+        <% else %>
+          <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded" style="height: 300px;">
+            No image
+          </div>
+        <% end %>
+      </div>
+
+      <div class="col-md-7">
+        <h2 class="mb-3"><%= @product.name %></h2>
+        <p class="mb-3"><%= @product.description %></p>
+        <p class="text-muted mb-3">Tags: <%= @product.tags %></p>
+        <p class="fs-4 text-primary fw-bold">$<%= number_with_precision(@product.price, precision: 2) %></p>
+      </div>
+    </div>
+    <div 
+        data-controller="product-chat"
+        data-product-id="<%= @product.id %>"
+      >
+      <div data-product-chat-target="messages" class="border p-2 mb-2" style="height: 150px; overflow-y: auto;">
+      </div>
+
+      <form data-action="submit->product-chat#send">
+        <input 
+          type="text" 
+          data-product-chat-target="input" 
+          class="form-control" 
+          placeholder="Ask something about this product..."
+        />
+      </form>
+    </div>
+  </div>
+</div>

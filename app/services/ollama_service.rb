@@ -38,5 +38,40 @@ class OllamaService
       Rails.logger.error("EmbeddingService failed: #{e.message}")
       nil
     end
+
+    def ask_stream(product, question)
+      prompt = <<~PROMPT
+        Answer the question using the following product information:
+        Name: #{product.name}
+        Description: #{product.description}
+        Tags: #{product.tags}
+        Price: #{product.price}
+
+        Question: #{question}
+      PROMPT
+
+      uri = URI("#{OLLAMA_API_URL}/chat")
+      request = Net::HTTP::Post.new(uri)
+      request["Content-Type"] = "application/json"
+      request.body = {
+        model: MODEL,
+        messages: [ { role: "user", content: prompt } ],
+        stream: true
+      }.to_json
+
+      Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(request) do |response|
+          buffer = ""
+          response.read_body do |chunk|
+            data = JSON.parse(chunk)
+            content = data.dig("message", "content")
+
+            yield content if content.present?
+          end
+        end
+      end
+    rescue => e
+      Rails.logger.error "Streaming failed: #{e.message}"
+    end
   end
 end
