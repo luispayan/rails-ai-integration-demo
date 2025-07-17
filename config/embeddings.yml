@@ -1,0 +1,16 @@
+---
+Default:
+  name: "<%= name %>"
+  description: "<%= description %>"
+  tags: "<%= tags %>"
+Product:
+  content: |
+    Product Name: <%= name %>
+    Description: <%= description %>
+    Tags: <%= tags %>
+Post:
+  content: |-
+    title: <%= title %>
+    body: <%= body %>
+    views: <%= views %>
+    tags: <%= tags %>

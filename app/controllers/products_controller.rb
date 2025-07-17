@@ -20,7 +20,7 @@ end
 
   def search
     query = params[:query] + ", NOTE: this should be related to products"
-    embedding = normalize_vector(OllamaService.generate_embedding(query)) if params[:query].present?
+    embedding = VectorService.normalize_vector(OllamaService.generate_embedding(query)) if params[:query].present?
 
     if embedding.present?
       vector_str = "[#{embedding.join(',')}]"

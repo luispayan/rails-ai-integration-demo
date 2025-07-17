@@ -1,12 +1,13 @@
 class Product < ApplicationRecord
   include ProductsHelper
+  include Embeddable
 
   def formatted_price
     "$%.2f" % price
   end
 
   def generate_embedding!
-    embedding = normalize_vector(OllamaService.generate_embedding(custom_embedding_context))
+    embedding = VectorService.normalize_vector(OllamaService.generate_embedding(custom_embedding_context))
     update(embedding: embedding)
   rescue StandardError => e
     Rails.logger.error "Failed to generate embedding for product #{id}: #{e.message}"

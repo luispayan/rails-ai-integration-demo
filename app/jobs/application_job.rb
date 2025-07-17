@@ -1,7 +1,11 @@
 class ApplicationJob < ActiveJob::Base
-  # Automatically retry jobs that encountered a deadlock
-  # retry_on ActiveRecord::Deadlocked
+  private
 
-  # Most jobs are safe to ignore if the underlying records are no longer available
-  # discard_on ActiveJob::DeserializationError
+  def models_with_embedding
+    Rails.application.eager_load!
+
+    ActiveRecord::Base.descendants.select do |model|
+      model.table_exists? && model.column_names.include?("embedding")
+    end
+  end
 end
