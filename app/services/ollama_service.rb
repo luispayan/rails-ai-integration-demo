@@ -73,5 +73,23 @@ class OllamaService
     rescue => e
       Rails.logger.error "Streaming failed: #{e.message}"
     end
+
+    def generate_sql_from_question(question)
+      prompt = <<~PROMPT
+        Given the following PostgreSQL schema:
+
+        users(id, name, email, gender, age, country, state, signup_date)
+        products(id, name, description, price, tags)
+        orders(id, user_id, product_id, quantity)
+
+        Write a SQL query to answer this question: "#{question}"
+        Return the SQL query as a string without any additional text.
+      PROMPT
+
+      ask(prompt)
+    rescue => e
+      Rails.logger.error "Failed to generate SQL: #{e.message}"
+      nil
+    end
   end
 end
