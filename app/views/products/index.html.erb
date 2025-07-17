@@ -1,0 +1,14 @@
+<div class="container py-5">
+  <h1 class="text-center mb-5 display-5">Summer Collection</h1>
+
+  <%= form_with url: search_products_path, method: :post, data: { turbo_frame: "results" }, class: "mb-5 row justify-content-center" do |f| %>
+    <div class="col-md-6 d-flex gap-2">
+      <%= f.text_field :query, placeholder: "Search for a product...", class: "form-control" %>
+      <%= f.submit "Search", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <turbo-frame id="results">
+    <%= render partial: "products", locals: { products: @products, pagy: @pagy } %>
+  </turbo-frame>
+</div>
